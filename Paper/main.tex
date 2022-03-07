@@ -1,0 +1,28 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{style_commands}
+
+\title{Simultaneous Graph Learning and Matrix Recovery}
+\author{Seyyid Emre Sofuoglu, Selin Aviyente}
+
+\begin{document}
+\maketitle
+
+\section{Methods}
+Our aim is to learn the underlying manifold of a data on a Cartesian Product Graph and recovery missing or grossly corrupted entries. The objective can be written in convex terms as:
+\begin{gather}
+    \text{minimize}_{G, S, \Phi_1, \Phi_2}\mathrm{tr}(G^\top \Phi_1 G) + \mathrm{tr}(G \Phi_2 G^\top) + \|S\|_1, \nonumber \\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[G + S], \; \Phi_1, \Phi_2 \in \S, 
+    \label{eq:objective}
+\end{gather}
+where $\Phi_1, \Phi_2$ are Graph Laplacians for the row graph and column graph, respectively, and $\S$ is the space of undirected graph Laplacians. When the graph constraints are explicitely written, \eqref{eq:objective} becomes:
+\begin{gather}
+    \text{minimize}_{G, S, \Phi_1, \Phi_2}\mathrm{tr}(G^\top \Phi_1 G) + \mathrm{tr}(G \Phi_2 G^\top) + \|S\|_1 + \|\Phi_1\|_F^2+ \|\Phi_2\|_F^2, \nonumber\\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[G + S], \; \Phi_i=\Phi_i^\top, \; \Phi_i\mathbf{1} = 0, \; \Phi_i\succeq 0, \; \mathrm{tr}(\Phi_i)=2I_i
+    \label{eq:objective_gr}
+\end{gather}
+
+\subsection{Optimization}
+For \eqref{eq:objective_gr} to be optimized, the graph variable $G$ can be separated into two variables to avoid large inverses. 
+
+% \bibliographystyle{IEEEtran}
+% \bibliography{ref}
+\end{document}
