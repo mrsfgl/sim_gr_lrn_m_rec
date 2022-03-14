@@ -11,17 +11,63 @@
 \section{Methods}
 Our aim is to learn the underlying manifold of a data on a Cartesian Product Graph and recovery missing or grossly corrupted entries. The objective can be written in convex terms as:
 \begin{gather}
-    \text{minimize}_{G, S, \Phi_1, \Phi_2}\mathrm{tr}(G^\top \Phi_1 G) + \mathrm{tr}(G \Phi_2 G^\top) + \|S\|_1, \nonumber \\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[G + S], \; \Phi_1, \Phi_2 \in \S, 
+    \text{minimize}_{L, S, \Phi_1, \Phi_2}\mathrm{tr}(L^\top \Phi_1 L) + \mathrm{tr}(L \Phi_2 L^\top) + \|S\|_1, \nonumber \\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[L + S], \; \Phi_1, \Phi_2 \in \S, 
     \label{eq:objective}
 \end{gather}
 where $\Phi_1, \Phi_2$ are Graph Laplacians for the row graph and column graph, respectively, and $\S$ is the space of undirected graph Laplacians. When the graph constraints are explicitely written, \eqref{eq:objective} becomes:
 \begin{gather}
-    \text{minimize}_{G, S, \Phi_1, \Phi_2}\mathrm{tr}(G^\top \Phi_1 G) + \mathrm{tr}(G \Phi_2 G^\top) + \|S\|_1 + \|\Phi_1\|_F^2+ \|\Phi_2\|_F^2, \nonumber\\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[G + S], \; \Phi_i=\Phi_i^\top, \; \Phi_i\mathbf{1} = 0, \; \Phi_i\succeq 0, \; \mathrm{tr}(\Phi_i)=2I_i
+    \text{minimize}_{L, S, \Phi_1, \Phi_2}\alpha_1\mathrm{tr}(L^\top \Phi_1 L) + \alpha_2\mathrm{tr}(L \Phi_2 L^\top) + \|S\|_1 + \|\Phi_1\|_F^2+ \|\Phi_2\|_F^2, \nonumber\\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[L + S], \; \Phi_i=\Phi_i^\top, \; \Phi_i\mathbf{1} = 0, \; \mathrm{tr}(\Phi_i)=2I_i.
     \label{eq:objective_gr}
 \end{gather}
 
+Since the graph Laplacians are assumed to be symmetric, the upper triangle portion is enough to summarize the conditions on them. This allows us to rewrite \eqref{eq:objective_gr} as:
+\begin{gather}
+    \text{minimize}_{L, S, \phi_i\leq 0, \d_{\phi_i}} \sum_{i=1}^2\alpha_i\left(2\l_i^\top \phi_i + \d_{\l_i}^\top \d_{\phi_i}+\beta_{1,i}f(\d_{\phi_i})+\beta_{2,i} g(\phi_i) \right) + \|S\|_1, \nonumber\\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[L + S], \; P_i \phi_i = -\d_{\phi_i},
+\end{gather}
+where $\l_i=\upper(L_{(i)} L_{(i)}^\top)$ $\phi_i=\upper(\Phi_i)$, $\d_i=\diag(L_{(i)} L_{(i)}^\top)$, $\d_{\phi_i} = \diag(\Phi_i)$, and $P_i\in\R^{I_i\times I_i(I_i-1)/2}$ is a matrix such that $P_i \upper(W_i) = W_i\mathbf{1}-\diag(W_i)$. $f(.)$ is a function that controls the degree distribution and $g(.)$ is a function that controls the sparsity of learned graph.
+
 \subsection{Optimization}
-For \eqref{eq:objective_gr} to be optimized, the graph variable $G$ can be separated into two variables to avoid large inverses. 
+\eqref{eq:objective_gr} will be solved using ADMM. For \eqref{eq:objective_gr} to be optimized, the graph variable $L$ can be separated into two variables $L_i$, for $i\in\{1,2\}$ to avoid large inverses. Corresponding augmented Lagrangian is written as:
+\begin{gather}
+    \|S\|_1+\lambda_1\|\P_{\Omega}[Y - L - S-\Gamma_1]\|_F^2 + \sum_{i=1}^2\alpha_{i}\mathrm{tr}(L_{i}^\top \Phi_i L_{i}) + \beta_{1,i}f(\d_{\phi_i})+\beta_{2,i}g(\phi_i)+\lambda_{2,i}\|L_{(i)}-L_i-\Gamma_{2,i}\|_F^2\nonumber\\
+    + \lambda_{3,i}\|P_i\phi_{i}+\d_{\phi_i}-\Gamma_{3,i}\|_F^2+ \lambda_{4,i}(\mathbf{1}^\top \d_{\phi_i}-I_i-\gamma_{4,i})^2
+\end{gather}
+
+The variables are updated according to the following:
+\begin{gather}
+    \P_{\Omega}[L^{t+1}] = \P_{\Omega}\left[\frac{1}{\lambda_1+\sum_{i=1}^2\lambda_{2,i}} \left( \lambda_1Y-S^t-\Gamma_1^t+\sum_{i=1}^2\lambda_{2,i}(L_{(i)}^t-\Gamma_{2,i}^t)\right)\right]. \\
+    \P_{\Omega^\perp}[L^{t+1}] = \P_{\Omega^\perp}\left[\sum_{i=1}^2\frac{\lambda_{2,i}}{\sum_{i=1}^2\lambda_{2,i}}(L_{(i)}^t-\Gamma_{2,i}^t)\right]
+\end{gather}
+
+\begin{gather}
+    S^{t+1} = \sigma(Y-L^{t+1}-\Gamma_1^t, \lambda_1),
+\end{gather}
+where $\sigma(.)$ is the soft thresholding operator.
+
+\begin{gather}
+    L_i^{t+1} = L_{i,inv}^t(L_i^{t+1}-\Gamma_{2,i}^t),
+\end{gather}
+where $L_{i,inv} = (\I+\frac{\alpha_i}{\lambda_{2,i}}\Phi_i^t)^{-1}$.
+
+
+\begin{gather}
+    \phi_i^{t+1} = \Pi_{\R^{I_i(I_i-1)/2}_{-}}\left[ \left[-\beta_{2,i}\I+\lambda_{3,i}P_{i}^\top P_i\right]^{-1}\left(\l_i^{t+1}+\lambda_{3,i}P^\top\left(\d_{\phi_i}^t-\Gamma_{3,i}^t\right)\right) \right],
+\end{gather}
+where $\Pi_{\R^{I_i(I_i-1)/2}_{-}}[.]$ is an operator that projects to the negative orthant.
+
+\begin{gather}
+    \d_{\phi_i}^{t+1} = \left[\beta_{1,i}\I+\lambda_{4,i}\mathbf{1}\mathbf{1}^\top\right]^{-1}\left[(\lambda_{4,i}I_i-\gamma_{4,i}^t)\mathbf{1}-\alpha_{i}\d_{\l_i}^{t+1}+\Gamma_{3,i}^t\right]
+\end{gather}
+
+Finally, dual variables are updated as follows:
+\begin{gather}
+    \Gamma_1^{t+1} = \Gamma_1^{t} - \P_{\Omega}[Y-L^{t+1}-S^{t+1}] \\
+    \Gamma_{2,i}^{t+1} = \Gamma_{2,i}^{t} - (L_{(i)}^{t+1}-L_i^{t+1}) \\
+    \Gamma_{3,i}^{t+1} = \Gamma_{3,i}^{t} - (P_i\phi_i+\d_{\phi_i}) \\
+    \gamma_{4,i}^{t+1} = \gamma_{4,i}^{t} - (\mathbf{1}^\top \d_{\phi_i}-I_i)
+\end{gather}
+
+
 
 % \bibliographystyle{IEEEtran}
 % \bibliography{ref}
