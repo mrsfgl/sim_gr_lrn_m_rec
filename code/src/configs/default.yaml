@@ -1,0 +1,6 @@
+
+name: default-config
+
+model: 'default.yaml'
+
+data: 'default.yaml'

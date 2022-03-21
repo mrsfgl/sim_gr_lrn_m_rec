@@ -24,7 +24,7 @@ Since the graph Laplacians are assumed to be symmetric, the upper triangle porti
 \begin{gather}
     \text{minimize}_{L, S, \phi_i\leq 0, \d_{\phi_i}} \sum_{i=1}^2\alpha_i\left(2\l_i^\top \phi_i + \d_{\l_i}^\top \d_{\phi_i}+\beta_{1,i}f(\d_{\phi_i})+\beta_{2,i} g(\phi_i) \right) + \|S\|_1, \nonumber\\ \text{s.t.} \P_{\Omega}[Y] = \P_{\Omega}[L + S], \; P_i \phi_i = -\d_{\phi_i},
 \end{gather}
-where $\l_i=\upper(L_{(i)} L_{(i)}^\top)$ $\phi_i=\upper(\Phi_i)$, $\d_i=\diag(L_{(i)} L_{(i)}^\top)$, $\d_{\phi_i} = \diag(\Phi_i)$, and $P_i\in\R^{I_i\times I_i(I_i-1)/2}$ is a matrix such that $P_i \upper(W_i) = W_i\mathbf{1}-\diag(W_i)$. $f(.)$ is a function that controls the degree distribution and $g(.)$ is a function that controls the sparsity of learned graph.
+where $\l_i=\upper(L_{(i)} L_{(i)}^\top)$ $\phi_i=\upper(\Phi_i)$, $\d_{l_i}=\diag(L_{(i)} L_{(i)}^\top)$, $\d_{\phi_i} = \diag(\Phi_i)$, and $P_i\in\R^{I_i\times I_i(I_i-1)/2}$ is a matrix such that $P_i \upper(W_i) = W_i\mathbf{1}-\diag(W_i)$. $f(.)$ is a function that controls the degree distribution and $g(.)$ is a function that controls the sparsity of learned graph.
 
 \subsection{Optimization}
 \eqref{eq:objective_gr} will be solved using ADMM. For \eqref{eq:objective_gr} to be optimized, the graph variable $L$ can be separated into two variables $L_i$, for $i\in\{1,2\}$ to avoid large inverses. Corresponding augmented Lagrangian is written as:

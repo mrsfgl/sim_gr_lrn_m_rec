@@ -1,0 +1,8 @@
+
+name: default-data
+
+type: 'stationary_smooth'
+dims: [50, 50]
+noise: 'gross'
+missing_data: [0.2]
+graph_type: 'erdos-renyi'
