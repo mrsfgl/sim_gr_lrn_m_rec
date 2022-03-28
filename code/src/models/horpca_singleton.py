@@ -131,12 +131,7 @@ def update_L(Y, S, Lx, Lambda, alpha):
     '''Updates variable L.'''
     sizes = Y.shape
     n = len(sizes)
-    L = np.zeros(sizes)
-    temp1 = alpha[0]*(Y-S-Lambda[0])
-    temp2 = alpha[1]*sum(Lx[i] + Lambda[1][i] for i in range(n))
-    L[~Y.mask] = (temp1[~Y.mask] + temp2[~Y.mask])/(alpha[0]+n*alpha[1])
-    L[Y.mask] = temp2[Y.mask]/(n*alpha[1])
-    return L
+    return (1/n)*(Y-S-Lambda[0][i] for i in range(n))
 
 
 def update_Lambda(Y, Lambda, n, L, S, Lx, t_norm):
