@@ -1,8 +1,10 @@
 
 name: default-data
 
-type: 'stationary_smooth'
-dims: [50, 50]
-noise: 'gross'
-missing_data: [0.2]
-graph_type: 'erdos-renyi'
+type: 'low_rank'
+dims: [50, 50, 20]
+ranks: [5,5,5]
+noise_type: 'gross'
+noise_level: 0.3
+missing_ratio: [0.2]
+# graph_type: 'erdos-renyi'

@@ -3,9 +3,9 @@ import click
 import logging
 from omegaconf import OmegaConf
 from pathlib import Path
-from src.data.generate import *
-from src.data.contaminate import *
-from src.data.generate_graphs import *
+from generate import *
+from contaminate import *
+from generate_graphs import *
 from dotenv import find_dotenv, load_dotenv
 
 # @click.command()
@@ -20,21 +20,11 @@ def main(data_config_path):
     logger.info('making final data set from raw data')
 
     dims = input_params.dims
-    if input_params.type == 'stationary_smooth':
-        Phi = generate_graphs(sizes = dims) # Add graph density as well.
-        Y, V = generate_smooth_stationary_data(Phi)
-    elif input_params.type == 'low_rank':
-        ranks = input_params.ranks
-        Y = generate_low_rank_data(dims, ranks)
-    else:
-        raise ValueError("Wrong data type.")
+    Phi = generate_graphs(sizes = dims) # Add graph density as well.
+    Y = generate_smooth_stationary_data(Phi)
+    Y_noisy = contaminate_signal(Y) # Add noise type, noise parameter level, missing data percentage etc.
 
-    Y_noisy = contaminate_signal(Y,
-                                 noise_rate=input_params.noise_level, 
-                                 noise_type=input_params.noise_type, 
-                                 missing_ratio=input_params.missing_ratio) # Add noise type, noise parameter level, missing data percentage etc.
-
-    return Y_noisy, Y, input_params # Consider saving the data rather than passing it along
+    return Y_noisy, input_params # Consider saving the data rather than passing it along
 
 
 if __name__ == '__main__':

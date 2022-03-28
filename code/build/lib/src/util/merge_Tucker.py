@@ -1,5 +1,5 @@
-from src.util.t2m import t2m
-from src.util.m2t import m2t
+from t2m import t2m
+from m2t import m2t
 
 
 def merge_Tucker(C, U, dims, transpose=False):

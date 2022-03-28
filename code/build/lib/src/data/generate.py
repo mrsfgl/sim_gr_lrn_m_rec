@@ -1,7 +1,7 @@
 import numpy as np
-from src.util.merge_Tucker import merge_Tucker
-from src.util.t2m import t2m
-from src.util.m2t import m2t
+from util.merge_Tucker import merge_Tucker
+from util.t2m import t2m
+from util.m2t import m2t
 
 
 def generate_low_rank_data(dim, ranks):

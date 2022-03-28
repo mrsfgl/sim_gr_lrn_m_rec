@@ -20,7 +20,7 @@ def generate_graphs(sizes, dens_multiplier=2):
     '''
 
     n = len(sizes)
-    if not hasattr(dens_multiplier,'__len__'):
+    if len(dens_multiplier) < n:
         dens_multiplier = [dens_multiplier for _ in range(n)]
 
     # List of graphs for each mode

@@ -35,28 +35,28 @@ where $\l_i=\upper(L_{(i)} L_{(i)}^\top)$ $\phi_i=\upper(\Phi_i)$, $\d_{l_i}=\di
 
 The variables are updated according to the following:
 \begin{gather}
-    \P_{\Omega}[L^{t+1}] = \P_{\Omega}\left[\frac{1}{\lambda_1+\sum_{i=1}^2\lambda_{2,i}} \left( \lambda_1Y-S^t-\Gamma_1^t+\sum_{i=1}^2\lambda_{2,i}(L_{(i)}^t-\Gamma_{2,i}^t)\right)\right]. \\
+    \P_{\Omega}[L^{t+1}] = \P_{\Omega}\left[\frac{1}{\lambda_1+\sum_{i=1}^2\lambda_{2,i}} \left( \lambda_1(Y-S^t-\Gamma_1^t)+\sum_{i=1}^2\lambda_{2,i}(L_{(i)}^t-\Gamma_{2,i}^t)\right)\right]. \\
     \P_{\Omega^\perp}[L^{t+1}] = \P_{\Omega^\perp}\left[\sum_{i=1}^2\frac{\lambda_{2,i}}{\sum_{i=1}^2\lambda_{2,i}}(L_{(i)}^t-\Gamma_{2,i}^t)\right]
 \end{gather}
 
 \begin{gather}
-    S^{t+1} = \sigma(Y-L^{t+1}-\Gamma_1^t, \lambda_1),
+    S^{t+1} = \sigma(Y-L^{t+1}-\Gamma_1^t, 2/\lambda_1),
 \end{gather}
 where $\sigma(.)$ is the soft thresholding operator.
 
 \begin{gather}
-    L_i^{t+1} = L_{i,inv}^t(L_i^{t+1}-\Gamma_{2,i}^t),
+    L_i^{t+1} = L_{i,inv}^t(L_{(i)}^{t+1}-\Gamma_{2,i}^t),
 \end{gather}
 where $L_{i,inv} = (\I+\frac{\alpha_i}{\lambda_{2,i}}\Phi_i^t)^{-1}$.
 
 
 \begin{gather}
-    \phi_i^{t+1} = \Pi_{\R^{I_i(I_i-1)/2}_{-}}\left[ \left[-\beta_{2,i}\I+\lambda_{3,i}P_{i}^\top P_i\right]^{-1}\left(\l_i^{t+1}+\lambda_{3,i}P^\top\left(\d_{\phi_i}^t-\Gamma_{3,i}^t\right)\right) \right],
+    \phi_i^{t+1} = \Pi_{\R^{I_i(I_i-1)/2}_{-}}\left[ -\left[\beta_{2,i}\I+\lambda_{3,i}P_{i}^\top P_i\right]^{-1}\left(2\alpha_i\l_i^{t+1}+\lambda_{3,i}P^\top\left(\d_{\phi_i}^t-\Gamma_{3,i}^t\right)\right) \right],
 \end{gather}
 where $\Pi_{\R^{I_i(I_i-1)/2}_{-}}[.]$ is an operator that projects to the negative orthant.
 
 \begin{gather}
-    \d_{\phi_i}^{t+1} = \left[\beta_{1,i}\I+\lambda_{4,i}\mathbf{1}\mathbf{1}^\top\right]^{-1}\left[(\lambda_{4,i}I_i-\gamma_{4,i}^t)\mathbf{1}-\alpha_{i}\d_{\l_i}^{t+1}+\Gamma_{3,i}^t\right]
+    \d_{\phi_i}^{t+1} = \left[(\beta_{1,i}+\lambda_{3,i})\I+\lambda_{4,i}\mathbf{1}\mathbf{1}^\top\right]^{-1}\left[\lambda_{4,i}(I_i+\gamma_{4,i}^t)\mathbf{1}-\alpha_{i}\d_{\l_i}^{t+1}-\lambda_{3,i}P_{i}\phi_{i}^{t+1}+\lambda_{3,i}\Gamma_{3,i}^t\right]
 \end{gather}
 
 Finally, dual variables are updated as follows:
